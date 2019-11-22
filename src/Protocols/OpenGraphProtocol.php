@@ -5,6 +5,7 @@ namespace WebChemistry\HtmlMetadata\Protocols;
 use Nette\Utils\Strings;
 use WebChemistry\HtmlMetadata\HtmlMetadata;
 use WebChemistry\HtmlMetadata\Normalizers\UrlNormalizer;
+use WebChemistry\HtmlMetadata\Protocols\Sources\Image;
 
 final class OpenGraphProtocol {
 
@@ -43,8 +44,12 @@ final class OpenGraphProtocol {
 		return $this->metadata->getMeta('twitter:title');
 	}
 
-	public function getImageUrl(): ?string {
+	protected function getImageUrl(): ?string {
 		return $this->toAbsoluteUrl($this->metadata->getMetaVariants(['og:image', 'twitter:image:src', 'twitter:image']));
+	}
+
+	public function getImage(): Image {
+		return new Image($this->getImageUrl());
 	}
 
 	protected function toAbsoluteUrl(?string $url): ?string {
@@ -53,9 +58,9 @@ final class OpenGraphProtocol {
 		}
 
 		if (Strings::startsWith($url, '//')) {
-			$url = $this->host . substr($url, 1);
+			$url = $this->metadata->getHost() . substr($url, 1);
 		} else if (Strings::startsWith($url, '/')) {
-			$url = $this->host = $url;
+			$url = $this->metadata->getHost() . $url;
 		}
 		$url = UrlNormalizer::normalize($url);
 		if (!filter_var($url, FILTER_VALIDATE_URL)) {
