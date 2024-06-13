@@ -1,0 +1,16 @@
+{
+    "name": "webchemistry/html-metadata",
+    "require": {
+        "php": ">= 8.2",
+        "nette/utils": "^3.0 || ^4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "WebChemistry\\HtmlMetadata\\": "src"
+        }
+    },
+    "require-dev": {
+        "nette/application": "^3.2",
+        "phpstan/phpstan": "^1.11"
+    }
+}

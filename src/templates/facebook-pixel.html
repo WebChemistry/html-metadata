@@ -1,0 +1,11 @@
+<script>
+	_fbq = fbq = function () { fbq.callMethod ? fbq.callMethod.apply(fbq, arguments) : fbq.queue.push(arguments); };
+	fbq.push = fbq;
+	fbq.loaded = true;
+	fbq.version = '2.0';
+	fbq.queue = [];
+
+	fbq('init', '{{pixel}}');
+	fbq('track', 'PageView');
+</script>
+<script src="https://connect.facebook.net/en_US/fbevents.js" async defer></script>
