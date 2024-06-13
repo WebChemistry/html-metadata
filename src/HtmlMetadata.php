@@ -202,7 +202,13 @@ class HtmlMetadata
 	public function setSiteName(?string $siteName): self
 	{
 		$this->items['og:site_name'] = $this->tryToCreateMetaProperty('og:site_name', $siteName);
-		$this->items['twitter:site'] = $this->tryToCreateMetaName('twitter:site', $siteName);
+
+		return $this;
+	}
+
+	public function setTwitterSite(?string $site): self
+	{
+		$this->items['twitter:site'] = $this->tryToCreateMetaName('twitter:site', $site);
 
 		return $this;
 	}
