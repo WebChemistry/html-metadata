@@ -20,7 +20,22 @@ class HtmlMetadata
 		protected readonly ?string $titleTemplate = null,
 	)
 	{
+		$this->setCharset('utf-8');
+		$this->items['http-equiv'] = Html::el('meta', [
+			'http-equiv' => 'X-UA-Compatible',
+			'content' => 'IE=edge,chrome=1',
+		]);
+		$this->items['viewport'] = $this->createMetaName('viewport', 'width=device-width, initial-scale=1');
 		$this->items['twitter:card'] = $this->createMetaName('twitter:card', 'summary_large_image');
+	}
+
+	public function setCharset(string $charset): self
+	{
+		$this->items['charset'] = Html::el('meta', [
+			'charset' => $charset,
+		]);
+
+		return $this;
 	}
 
 	public function setTitle(?string $title): self
