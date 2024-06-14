@@ -12,7 +12,7 @@ trait PartableStructuredMetadata
 
 	public function addPart(StructuredMetadataPart $part): static
 	{
-		$this->parts[] = $part;
+		$this->parts[] = $part->toArray();
 
 		return $this;
 	}
