@@ -3,17 +3,15 @@
 namespace WebChemistry\HtmlMetadata\Structured;
 
 use DateTimeInterface;
-use WebChemistry\HtmlMetadata\Structured\Part\PaywallPart;
 use WebChemistry\HtmlMetadata\StructuredMetadata;
 
 final class NewsArticleStructuredMetadata implements StructuredMetadata
 {
 
+	use PartableStructuredMetadata;
 
 	/** @var mixed[] */
 	private array $data;
-
-	private ?PaywallPart $paywallPart = null;
 
 	public function __construct(
 		string $headline,
@@ -37,7 +35,7 @@ final class NewsArticleStructuredMetadata implements StructuredMetadata
 	public function addImage(string $image): self
 	{
 		$this->data['image'] ??= [];
-		$this->data['image'][] = $image;
+		$this->data['image'][] = $image; // @phpstan-ignore-line
 
 		return $this;
 	}
@@ -45,13 +43,6 @@ final class NewsArticleStructuredMetadata implements StructuredMetadata
 	public function setDescription(?string $description): self
 	{
 		$this->data['description'] = $description;
-
-		return $this;
-	}
-
-	public function setPaywall(?PaywallPart $paywallPart): self
-	{
-		$this->paywallPart = $paywallPart;
 
 		return $this;
 	}
@@ -72,11 +63,8 @@ final class NewsArticleStructuredMetadata implements StructuredMetadata
 	 */
 	public function toArray(): array
 	{
-		$data = array_merge(
-			$this->data,
-			$this->paywallPart?->toArray() ?? [],
-		);
-
+		$data = $this->injectParts($this->data);
+		
 		return array_filter(
 			$data,
 			fn (mixed $value): bool => $value !== null,
