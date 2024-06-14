@@ -2,21 +2,14 @@
 
 namespace WebChemistry\HtmlMetadata\Structured\Part;
 
-final class PaywallPart
+final class PaywallPart implements StructuredMetadataPart
 {
 
-	/** @var mixed[] */
-	private array $parts = [];
-
-	public function addPart(string $cssSelector, bool $isForFree = false): self
+	public function __construct(
+		private string $cssSelector,
+		private bool $isForFree = false,
+	)
 	{
-		$this->parts[] = [
-			'@type' => 'WebPageElement',
-			'isAccessibleForFree' => $isForFree ? 'True' : 'False',
-			'cssSelector' => $cssSelector,
-		];
-
-		return $this;
 	}
 
 	/**
@@ -25,8 +18,9 @@ final class PaywallPart
 	public function toArray(): array
 	{
 		return [
-			'isAccessibleForFree' => 'False',
-			'hasPart' => count($this->parts) === 1 ? current($this->parts) : $this->parts,
+			'@type' => 'WebPageElement',
+			'isAccessibleForFree' => $this->isForFree,
+			'cssSelector' => $this->cssSelector,
 		];
 	}
 

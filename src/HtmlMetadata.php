@@ -305,6 +305,9 @@ class HtmlMetadata
 		return $content ? Html::el('meta', ['property' => $name, 'content' => $content]) : null;
 	}
 
+	/**
+	 * @param array<string, scalar|null> $parameters
+	 */
 	protected function createFromTemplate(string $file, array $parameters): Html
 	{
 		$contents = FileSystem::read($file);
@@ -313,7 +316,7 @@ class HtmlMetadata
 				throw new LogicException(sprintf('Template variable %s not exists.', $matches[1]));
 			}
 
-			return htmlspecialchars($parameters[$matches[1]], ENT_QUOTES);
+			return htmlspecialchars((string) $parameters[$matches[1]], ENT_QUOTES);
 		});
 
 		return Html::fromHtml($contents);
@@ -324,7 +327,7 @@ class HtmlMetadata
 		$json = json_encode($s, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
 		if ($json === false || ($error = json_last_error())) {
-			throw new InvalidArgumentException(json_last_error_msg(), $error);
+			throw new InvalidArgumentException(json_last_error_msg(), $error ?? 0);
 		}
 
 		return str_replace([']]>', '<!', '</'], [']]\u003E', '\u003C!', '<\/'], $json);
