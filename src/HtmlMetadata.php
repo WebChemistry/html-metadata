@@ -266,11 +266,11 @@ class HtmlMetadata
 		return $this;
 	}
 
-	public function addStructuredMetadata(StructuredMetadata $metadata): self
+	public function addStructuredMetadata(StructuredMetadata $metadata, bool $prettyPrint = false): self
 	{
 		$this->items[$metadata->getId()] = Html::el('script', [
 			'type' => 'application/ld+json',
-		])->setHtml($this->escapeJs($metadata->toArray()));
+		])->setHtml($this->escapeJs($metadata->toArray(), $prettyPrint));
 
 		return $this;
 	}
@@ -322,9 +322,15 @@ class HtmlMetadata
 		return Html::fromHtml($contents);
 	}
 
-	protected function escapeJs(mixed $s): string
+	protected function escapeJs(mixed $s, bool $prettyPrint = false): string
 	{
-		$json = json_encode($s, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+		$flags = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES;
+		
+		if ($prettyPrint) {
+			$flags |= JSON_PRETTY_PRINT;
+		}
+		
+		$json = json_encode($s, $flags);
 
 		if ($json === false || ($error = json_last_error())) {
 			throw new InvalidArgumentException(json_last_error_msg(), $error ?? 0);

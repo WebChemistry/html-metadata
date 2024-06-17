@@ -2,14 +2,11 @@
 
 namespace WebChemistry\HtmlMetadata;
 
-interface StructuredMetadata
+use WebChemistry\HtmlMetadata\Structured\Part\StructuredMetadataPart;
+
+interface StructuredMetadata extends StructuredMetadataPart
 {
 
 	public function getId(): string;
-
-	/**
-	 * @return mixed[]
-	 */
-	public function toArray(): array;
 
 }
