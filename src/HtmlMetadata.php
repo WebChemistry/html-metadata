@@ -2,6 +2,7 @@
 
 namespace WebChemistry\HtmlMetadata;
 
+use DateTimeInterface;
 use InvalidArgumentException;
 use LogicException;
 use Nette\Utils\FileSystem;
@@ -89,6 +90,21 @@ class HtmlMetadata
 	public function setLocale(?string $locale): self
 	{
 		$this->items['og:locale'] = $this->tryToCreateMetaProperty('locale', $locale);
+
+		return $this;
+	}
+
+	public function setArticleType(DateTimeInterface $published, ?DateTimeInterface $modified = null): self
+	{
+		$this->items['og:type'] = $this->tryToCreateMetaProperty('og:type', 'article');
+		$this->items['article:published_time'] = $this->tryToCreateMetaProperty('article:published_time', $published->format('c'));
+
+		if ($modified) {
+			$this->items['article:modified_time'] = $this->tryToCreateMetaProperty(
+				'article:modified_time',
+				$modified->format('c')
+			);
+		}
 
 		return $this;
 	}
