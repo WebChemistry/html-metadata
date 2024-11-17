@@ -86,12 +86,30 @@ class HtmlMetadata
 		return $this;
 	}
 
-	public function setRobots(bool $follow = true, bool $index = true): self
+	/**
+	 * @param string[] $values
+	 * @example ['follow', 'index']
+	 * @example ['noindex', 'nofollow']
+	 * @example ['max-image-preview' => 'large']
+	 */
+	public function setRobots(array $values): self
 	{
-		$this->items['robots'] = $follow && $index ? null : Html::el('meta', [
+		$robots = '';
+
+		foreach ($values as $key => $value) {
+			if (!is_numeric($key)) {
+				$robots .= $key . ':' . $value . ', ';
+			} else {
+				$robots .= $value . ', ';
+			}
+		}
+
+		$robots = substr($robots, 0, -2);
+
+		$this->items['robots'] = $robots ? Html::el('meta', [
 			'name' => 'robots',
-			'content' => (!$index ? 'noindex' : '') . (!$follow && !$index ? ', ' : '') . (!$follow ? 'nofollow' : ''),
-		]);
+			'content' => $robots,
+		]) : null;
 
 		return $this;
 	}
