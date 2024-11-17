@@ -86,6 +86,13 @@ class HtmlMetadata
 		return $this;
 	}
 
+	public function setLocale(?string $locale): self
+	{
+		$this->items['og:locale'] = $this->tryToCreateMetaProperty('locale', $locale);
+
+		return $this;
+	}
+
 	/**
 	 * @param string[] $values
 	 * @example ['follow', 'index']
