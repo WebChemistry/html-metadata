@@ -1,4 +1,4 @@
-<script>
+<script{{nonce}}>
 	_fbq = fbq = function () { fbq.callMethod ? fbq.callMethod.apply(fbq, arguments) : fbq.queue.push(arguments); };
 	fbq.push = fbq;
 	fbq.loaded = true;
@@ -8,4 +8,4 @@
 	fbq('init', '{{pixel}}');
 	fbq('track', 'PageView');
 </script>
-<script src="https://connect.facebook.net/en_US/fbevents.js" async defer></script>
+<script {{nonce}}src="https://connect.facebook.net/en_US/fbevents.js" async defer></script>

@@ -16,6 +16,8 @@ class HtmlMetadata
 	private array $items = [
 		'title' => null,
 	];
+	
+	private ?string $nonce = null;
 
 	public function __construct(
 		protected readonly ?string $titleTemplate = null,
@@ -30,6 +32,13 @@ class HtmlMetadata
 		$this->items['twitter:card'] = $this->createMetaName('twitter:card', 'summary_large_image');
 	}
 
+	public function setNonce(?string $nonce): static
+	{
+		$this->nonce = $nonce;
+
+		return $this;
+	}
+	
 	public function setCharset(string $charset): self
 	{
 		$this->items['charset'] = Html::el('meta', [
@@ -148,6 +157,7 @@ class HtmlMetadata
 	{
 		$this->items['facebook-pixel'] = $pixel ? $this->createFromTemplate(__DIR__ . '/templates/facebook-pixel.html', [
 			'pixel' => $pixel,
+			'nonce' => $this->getNonceAttribute(),
 		]) : null;
 
 		return $this;
@@ -204,6 +214,7 @@ class HtmlMetadata
 
 		$this->items['google-analytics'] = $this->createFromTemplate(__DIR__ . '/templates/google-analytics.html', [
 			'id' => $analytics,
+			'nonce' => $this->getNonceAttribute(),
 		]);
 
 		return $this;
@@ -394,4 +405,9 @@ class HtmlMetadata
 		return Strings::truncate($str, $length);
 	}
 
+	protected function getNonceAttribute(): string
+	{
+		return $this->nonce ? sprintf(' nonce="%s"', $this->nonce) : '';
+	}
+	
 }
