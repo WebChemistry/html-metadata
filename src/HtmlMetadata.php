@@ -157,7 +157,7 @@ class HtmlMetadata
 	{
 		$this->items['facebook-pixel'] = $pixel ? $this->createFromTemplate(__DIR__ . '/templates/facebook-pixel.html', [
 			'pixel' => $pixel,
-			'nonce' => $this->getNonceAttribute(),
+			'nonce' => new LiteralValue($this->getNonceAttribute()),
 		]) : null;
 
 		return $this;
@@ -214,7 +214,7 @@ class HtmlMetadata
 
 		$this->items['google-analytics'] = $this->createFromTemplate(__DIR__ . '/templates/google-analytics.html', [
 			'id' => $analytics,
-			'nonce' => $this->getNonceAttribute(),
+			'nonce' => new LiteralValue($this->getNonceAttribute()),
 		]);
 
 		return $this;
@@ -358,7 +358,7 @@ class HtmlMetadata
 	}
 
 	/**
-	 * @param array<string, scalar|null> $parameters
+	 * @param array<string, LiteralValue|scalar|null> $parameters
 	 */
 	protected function createFromTemplate(string $file, array $parameters): Html
 	{
@@ -366,6 +366,12 @@ class HtmlMetadata
 		$contents = Strings::replace($contents, '#\{\{\s*(\w+)\s*}}#', function (array $matches) use ($parameters): string {
 			if (!isset($parameters[$matches[1]])) {
 				throw new LogicException(sprintf('Template variable %s not exists.', $matches[1]));
+			}
+
+			$value = $parameters[$matches[1]];
+
+			if ($value instanceof LiteralValue) {
+				return $value->value;
 			}
 
 			return htmlspecialchars((string) $parameters[$matches[1]], ENT_QUOTES);
